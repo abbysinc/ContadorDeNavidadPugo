@@ -333,7 +333,41 @@
         document.body.appendChild(confeti);
         setTimeout(() => confeti.remove(), 6000);
       }
-    }
+    });
+
+    <script>
+async function mostrarAnuncios() {
+  try {
+    const res = await fetch("anuncios.json?t=" + Date.now());
+    const anuncios = await res.json();
+    if (anuncios.length === 0) return;
+
+    const ultimo = anuncios[anuncios.length - 1];
+    const caja = document.createElement("div");
+    caja.style.position = "fixed";
+    caja.style.bottom = "25px";
+    caja.style.right = "25px";
+    caja.style.background = "rgba(255,255,255,0.15)";
+    caja.style.border = "3px solid gold";
+    caja.style.padding = "20px";
+    caja.style.borderRadius = "15px";
+    caja.style.width = "300px";
+    caja.style.backdropFilter = "blur(10px)";
+    caja.style.boxShadow = "0 0 30px gold";
+    caja.style.zIndex = "9999";
+    caja.style.animation = "aparecer 0.8s ease";
+    caja.innerHTML = `
+      <h3 style="color:gold;text-shadow:0 0 10px red;">${ultimo.titulo}</h3>
+      <p style="font-size:1.1em;">${ultimo.descripcion}</p>
+      <button onclick="this.parentElement.remove()" 
+        style="margin-top:10px;background:red;color:white;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;">Cerrar 🎁</button>
+    `;
+    document.body.appendChild(caja);
+  } catch(e) {
+    console.log("No se pudo cargar anuncios.json");
+  }
+}
+mostrarAnuncios();
   </script>
 </body>
 </html>
