@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎅✨ Pugo Tracker Ultra Navideño 🎄🎁</title>
+
+  <!-- 🎄 Favicon -->
+  <link rel="icon" type="image/png" href="https://cdn.pixabay.com/photo/2021/12/14/03/31/santa-claus-6869556_1280.png">
+
+  <!-- Fuente festiva -->
+  <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: url('https://cdn.discordapp.com/attachments/1428211239804207155/1435316223217893406/39b94e67b72156a364c7271805b25098.gif?ex=690b85e6&is=690a3466&hm=d64b3d4ef198fbc85fd49bbbf77f73f8466ef3f8d685718ad31fb784e7dcb28c&') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: 'Mountains of Christmas', cursive;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* 🎅 Título */
+    h1 {
+      font-size: 3em;
+      margin-top: 80px;
+      margin-bottom: 25px;
+      text-shadow: 0 0 25px gold, 0 0 45px red;
+      animation: brillarTexto 3s infinite alternate;
+    }
+    @keyframes brillarTexto {
+      from { text-shadow: 0 0 20px #ff0000; }
+      to { text-shadow: 0 0 40px #00ff00; }
+    }
+
+    /* 🎄 Contador */
+    #countdown {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      background: linear-gradient(135deg, #e62828, #b30000);
+      padding: 20px 35px;
+      border-radius: 25px;
+      box-shadow: 0 0 35px rgba(255, 50, 50, 0.8);
+      border: 4px solid gold;
+      color: white;
+      letter-spacing: 1px;
+      animation: brillarCaja 2s infinite alternate;
+    }
+    @keyframes brillarCaja {
+      0% { box-shadow: 0 0 15px red; }
+      100% { box-shadow: 0 0 40px gold; }
+    }
+
+    .time-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 75px;
+      padding: 10px;
+      border: 3px solid gold;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 15px gold;
+      transition: transform 0.3s ease-in-out;
+    }
+    .time-box:hover { transform: scale(1.1); }
+
+    .time-box span.value {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 10px #ffd700;
+    }
+    .time-box span.label {
+      font-size: 0.9em;
+      opacity: 0.9;
+      color: #fff;
+    }
+
+    /* 🎅 Santa animado */
+    .santa {
+      position: fixed;
+      top: 80px;
+      left: -300px;
+      width: 250px;
+      z-index: 9;
+      animation: volar 20s linear infinite;
+      cursor: pointer;
+      filter: drop-shadow(0 0 25px gold);
+      transition: transform 0.3s;
+    }
+    .santa:hover { transform: scale(1.1); }
+    @keyframes volar {
+      0% { left: -300px; transform: scale(1) rotate(5deg); }
+      50% { top: 120px; transform: scale(1.1) rotate(-3deg); }
+      100% { left: 110%; top: 60px; transform: scale(1) rotate(5deg); }
+    }
+
+    /* ❄️ Nieve */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 1.5em;
+      opacity: 0.9;
+      animation: caer linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes caer {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+
+    /* 🔘 Botón musical */
+    #music-button {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: linear-gradient(45deg, #ff0000, #00ff00);
+      color: white;
+      border: 3px solid gold;
+      padding: 15px 25px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+      animation: brilloBoton 2s infinite;
+      z-index: 9999;
+    }
+    @keyframes brilloBoton {
+      0%, 100% { box-shadow: 0 0 15px gold; }
+      50% { box-shadow: 0 0 35px white; transform: scale(1.05); }
+    }
+
+    #spotify-player {
+      position: fixed;
+      bottom: 25px;
+      left: 25px;
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0.95;
+      z-index: 9998;
+      box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
+
+    /* 🎁 Caja navideña */
+    #navidad-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      overflow: hidden;
+    }
+
+    .popup-content {
+      background: linear-gradient(135deg, #ff3333, #ffd700);
+      color: white;
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 0 60px gold, 0 0 40px white;
+      text-align: center;
+      max-width: 500px;
+      animation: aparecerPopup 0.8s ease-out;
+      border: 5px double white;
+    }
+
+    @keyframes aparecerPopup {
+      0% { transform: scale(0.2) rotate(-10deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .popup-content h2 {
+      font-size: 2.5em;
+      text-shadow: 0 0 20px #fff, 0 0 30px gold;
+      margin-bottom: 10px;
+    }
+
+    .popup-content p {
+      font-size: 1.3em;
+      margin-bottom: 25px;
+      line-height: 1.5em;
+    }
+
+    .popup-content button {
+      background: gold;
+      color: #b30000;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1em;
+      font-weight: bold;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 0 25px white;
+      transition: all 0.3s;
+    }
+    .popup-content button:hover {
+      background: white;
+      color: #b30000;
+      transform: scale(1.1);
+      box-shadow: 0 0 30px gold;
+    }
+
+    .confeti {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      opacity: 0.9;
+      animation: caerConfeti linear forwards;
+      z-index: 5;
+    }
+    @keyframes caerConfeti {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <img class="santa" src="https://cdn.discordapp.com/attachments/1432113279374721127/1435409659656667187/santa_sleigh_PNG55.png?ex=690bdceb&is=690a8b6b&hm=c8aeb03949265c2e70d4038055ab7648c61424fd5b902aa6df5e43f726f98a82" alt="Santa volando">
+  <h1>🎅 ¡Cuenta Regresiva para la Navidad! 🎄</h1>
+
+  <div id="countdown">
+    <div class="time-box"><span class="value" id="days">00</span><span class="label">🎄 DÍAS</span></div>
+    <div class="time-box"><span class="value" id="hours">00</span><span class="label">🕐 HORAS</span></div>
+    <div class="time-box"><span class="value" id="minutes">00</span><span class="label">🎅 MIN</span></div>
+    <div class="time-box"><span class="value" id="seconds">00</span><span class="label">🎁 SEG</span></div>
+  </div>
+
+  <iframe id="spotify-player"
+    src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0Yxoavh5qJV?utm_source=generator&theme=0"
+    width="300" height="80" frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+
+  <button id="music-button">🎶 Encender Espíritu Navideño 🎅</button>
+
+  <div id="navidad-popup">
+    <div class="popup-content">
+      <h2>🎄 ¡Ho Ho Ho! 🎅</h2>
+      <p>🎁 ¡El espíritu navideño ha llegado al <strong>Pugo Tracker Ultra Navideño</strong>!  
+      Que la alegría, la fe y las luces llenen tu hogar de paz y felicidad. 🌟🎅</p>
+      <button id="cerrar-popup">Cerrar 🎀</button>
+    </div>
+  </div>
+
+  <script>
+    const christmas = new Date(`${new Date().getFullYear()}-12-25T00:00:00`);
+    const d = document.getElementById("days"), h = document.getElementById("hours"),
+          m = document.getElementById("minutes"), s = document.getElementById("seconds");
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = christmas - now;
+      if (diff <= 0) {
+        document.querySelector("h1").textContent = "🎅🎁 ¡FELIZ NAVIDAD! 🎄✨";
+        lanzarConfeti();
+        return;
+      }
+      d.textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+      h.textContent = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      m.textContent = Math.floor((diff / (1000 * 60)) % 60);
+      s.textContent = Math.floor((diff / 1000) % 60);
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    function crearNieve() {
+      const copos = ["❄", "❅", "❆"];
+      const snowflake = document.createElement("div");
+      snowflake.classList.add("snowflake");
+      snowflake.innerHTML = copos[Math.floor(Math.random() * copos.length)];
+      snowflake.style.left = Math.random() * 100 + "vw";
+      snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
+      snowflake.style.fontSize = Math.random() * 15 + 10 + "px";
+      document.body.appendChild(snowflake);
+      setTimeout(() => snowflake.remove(), 6000);
+    }
+    setInterval(crearNieve, 120);
+
+    const spotifyFrame = document.getElementById('spotify-player');
+    const button = document.getElementById('music-button');
+    let activo = false;
+    button.addEventListener('click', () => {
+      if (!activo) {
+        spotifyFrame.src += "&autoplay=1";
+        button.textContent = "🔇 Pausar Espíritu 🎄";
+        activo = true;
+      } else {
+        spotifyFrame.src = spotifyFrame.src.replace("&autoplay=1", "");
+        button.textContent = "🎶 Encender Espíritu Navideño 🎅";
+        activo = false;
+      }
+    });
+
+    const santa = document.querySelector('.santa');
+    const popup = document.getElementById('navidad-popup');
+    const cerrarBtn = document.getElementById('cerrar-popup');
+
+    santa.addEventListener('click', () => {
+      popup.style.display = 'flex';
+      const bell = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
+      bell.play();
+      lanzarConfeti();
+    });
+    cerrarBtn.addEventListener('click', () => popup.style.display = 'none');
+
+    function lanzarConfeti() {
+      const colores = ['#00ff00', '#ffd700', '#ff0000', '#ffffff'];
+      const cantidad = 80;
+      for (let i = 0; i < cantidad; i++) {
+        const confeti = document.createElement('div');
+        confeti.classList.add('confeti');
+        confeti.style.left = Math.random() * 100 + 'vw';
+        confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+        confeti.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        confeti.style.width = confeti.style.height = Math.random() * 8 + 5 + 'px';
+        confeti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confeti);
+        setTimeout(() => confeti.remove(), 6000);
+      }
+    }
+  </script>
+</body>
+</html>
