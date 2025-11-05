@@ -15,7 +15,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: url('https://cdn.discordapp.com/attachments/1428211239804207155/1435316223217893406/39b94e67b72156a364c7271805b25098.gif?ex=690b85e6&is=690a3466&hm=d64b3d4ef198fbc85fd49bbbf77f73f8466ef3f8d685718ad31fb784e7dcb28c&') no-repeat center center fixed;
+      background: url('https://cdn.discordapp.com/attachments/1428211239804207155/1435316223217893406/39b94e67b72156a364c7271805b25098.gif') no-repeat center center fixed;
       background-size: cover;
       height: 100vh;
       display: flex;
@@ -28,7 +28,6 @@
       overflow: hidden;
     }
 
-    /* 🎅 Título */
     h1 {
       font-size: 3em;
       margin-top: 80px;
@@ -41,7 +40,6 @@
       to { text-shadow: 0 0 40px #00ff00; }
     }
 
-    /* 🎄 Contador */
     #countdown {
       display: flex;
       justify-content: center;
@@ -86,7 +84,6 @@
       color: #fff;
     }
 
-    /* 🎅 Santa animado */
     .santa {
       position: fixed;
       top: 80px;
@@ -105,7 +102,6 @@
       100% { left: 110%; top: 60px; transform: scale(1) rotate(5deg); }
     }
 
-    /* ❄️ Nieve */
     .snowflake {
       position: fixed;
       top: -10px;
@@ -121,7 +117,6 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
 
-    /* 🔘 Botón musical */
     #music-button {
       position: fixed;
       bottom: 25px;
@@ -154,7 +149,6 @@
       box-shadow: 0 0 20px rgba(255,255,255,0.5);
     }
 
-    /* 🎁 Caja navideña */
     #navidad-popup {
       position: fixed;
       top: 0; left: 0;
@@ -228,11 +222,78 @@
       0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
+
+    /* 🎁 Caja global de anuncios */
+    @keyframes navidadBrillo {
+      0% { box-shadow: 0 0 15px red, 0 0 25px gold; }
+      50% { box-shadow: 0 0 35px gold, 0 0 45px green; }
+      100% { box-shadow: 0 0 15px red, 0 0 25px gold; }
+    }
+    @keyframes aparecerAnuncio {
+      from { transform: translateX(-100%) scale(0.9); opacity: 0; }
+      to { transform: translateX(0) scale(1); opacity: 1; }
+    }
+    #caja-anuncio {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      max-width: 320px;
+      background: linear-gradient(135deg, rgba(255,0,0,0.85), rgba(0,128,0,0.8));
+      border: 3px solid gold;
+      border-radius: 20px;
+      padding: 20px;
+      color: white;
+      font-family: 'Mountains of Christmas', cursive;
+      box-shadow: 0 0 25px gold;
+      backdrop-filter: blur(8px);
+      animation: aparecerAnuncio 1s ease-out, navidadBrillo 2s infinite alternate;
+      z-index: 99999;
+      overflow: hidden;
+    }
+    #caja-anuncio h3 {
+      margin: 0 0 8px 0;
+      color: gold;
+      text-shadow: 0 0 10px white;
+    }
+    #caja-anuncio p {
+      font-size: 1.1em;
+      line-height: 1.3em;
+    }
+    #cerrar-anuncio {
+      margin-top: 12px;
+      background: gold;
+      border: none;
+      color: #b30000;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #cerrar-anuncio:hover {
+      background: white;
+      color: red;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px gold;
+    }
+    .nieve-anuncio {
+      position: absolute;
+      top: -10px;
+      color: white;
+      font-size: 1.2em;
+      opacity: 0.8;
+      animation: caerAnuncio linear infinite;
+      pointer-events: none;
+    }
+    @keyframes caerAnuncio {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 
 <body>
-  <img class="santa" src="https://cdn.discordapp.com/attachments/1432113279374721127/1435409659656667187/santa_sleigh_PNG55.png?ex=690bdceb&is=690a8b6b&hm=c8aeb03949265c2e70d4038055ab7648c61424fd5b902aa6df5e43f726f98a82" alt="Santa volando">
+  <img class="santa" src="https://cdn.discordapp.com/attachments/1432113279374721127/1435409659656667187/santa_sleigh_PNG55.png" alt="Santa volando">
   <h1>🎅 ¡Cuenta Regresiva para la Navidad! 🎄</h1>
 
   <div id="countdown">
@@ -333,41 +394,44 @@
         document.body.appendChild(confeti);
         setTimeout(() => confeti.remove(), 6000);
       }
-    });
+    }
 
-    <script>
-async function mostrarAnuncios() {
-  try {
-    const res = await fetch("anuncios.json?t=" + Date.now());
-    const anuncios = await res.json();
-    if (anuncios.length === 0) return;
+    // 🎁 ANUNCIO GLOBAL DESDE anuncios.json
+    async function mostrarAnuncioGlobal() {
+      try {
+        const res = await fetch("anuncios.json?t=" + Date.now());
+        const anuncios = await res.json();
+        if (anuncios.length === 0) return;
 
-    const ultimo = anuncios[anuncios.length - 1];
-    const caja = document.createElement("div");
-    caja.style.position = "fixed";
-    caja.style.bottom = "25px";
-    caja.style.right = "25px";
-    caja.style.background = "rgba(255,255,255,0.15)";
-    caja.style.border = "3px solid gold";
-    caja.style.padding = "20px";
-    caja.style.borderRadius = "15px";
-    caja.style.width = "300px";
-    caja.style.backdropFilter = "blur(10px)";
-    caja.style.boxShadow = "0 0 30px gold";
-    caja.style.zIndex = "9999";
-    caja.style.animation = "aparecer 0.8s ease";
-    caja.innerHTML = `
-      <h3 style="color:gold;text-shadow:0 0 10px red;">${ultimo.titulo}</h3>
-      <p style="font-size:1.1em;">${ultimo.descripcion}</p>
-      <button onclick="this.parentElement.remove()" 
-        style="margin-top:10px;background:red;color:white;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;">Cerrar 🎁</button>
-    `;
-    document.body.appendChild(caja);
-  } catch(e) {
-    console.log("No se pudo cargar anuncios.json");
-  }
-}
-mostrarAnuncios();
+        const anuncio = anuncios[anuncios.length - 1];
+        const caja = document.createElement("div");
+        caja.id = "caja-anuncio";
+        caja.innerHTML = `
+          <h3>${anuncio.titulo}</h3>
+          <p>${anuncio.descripcion}</p>
+          <button id="cerrar-anuncio">Cerrar 🎁</button>
+        `;
+        document.body.appendChild(caja);
+
+        document.getElementById("cerrar-anuncio").addEventListener("click", () => caja.remove());
+
+        // ❄️ Efecto nieve dentro del anuncio
+        function nieveDecorativa() {
+          const copos = ["❄", "❅", "❆"];
+          const n = document.createElement("div");
+          n.classList.add("nieve-anuncio");
+          n.textContent = copos[Math.floor(Math.random() * copos.length)];
+          n.style.left = Math.random() * 100 + "%";
+          n.style.animationDuration = Math.random() * 2 + 2 + "s";
+          caja.appendChild(n);
+          setTimeout(() => n.remove(), 4000);
+        }
+        setInterval(nieveDecorativa, 250);
+      } catch (e) {
+        console.log("❌ No se pudo cargar anuncios.json");
+      }
+    }
+    mostrarAnuncioGlobal();
   </script>
 </body>
 </html>
